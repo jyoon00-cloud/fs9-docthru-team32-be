@@ -80,6 +80,47 @@ async function main() {
       role: 'NORMAL',
     },
   });
+  // 추가 유저 생성 (총 12명)
+  const proUser3 = await prisma.user.create({
+    data: {
+      email: 'pro3@docthru.com',
+      nickname: '코딩곰돌이',
+      password: hashedPassword,
+      role: 'PRO',
+    },
+  });
+  const normalUser5 = await prisma.user.create({
+    data: {
+      email: 'user5@docthru.com',
+      nickname: '프론트엔드천재',
+      password: hashedPassword,
+      role: 'NORMAL',
+    },
+  });
+  const normalUser6 = await prisma.user.create({
+    data: {
+      email: 'user6@docthru.com',
+      nickname: '백엔드마스터',
+      password: hashedPassword,
+      role: 'NORMAL',
+    },
+  });
+  const normalUser7 = await prisma.user.create({
+    data: {
+      email: 'user7@docthru.com',
+      nickname: 'AI연구원',
+      password: hashedPassword,
+      role: 'NORMAL',
+    },
+  });
+  const normalUser8 = await prisma.user.create({
+    data: {
+      email: 'user8@docthru.com',
+      nickname: '데이터사이언티스트',
+      password: hashedPassword,
+      role: 'NORMAL',
+    },
+  });
 
   console.log('✅ 유저 생성 완료');
 
@@ -131,6 +172,43 @@ async function main() {
       },
     ],
   });
+await prisma.challengeApplication.createMany({
+  data: [
+    {
+      creatorId: normalUser5.id,
+      title: 'Python 3.12 새로운 기능 번역',
+      category: 'Python',
+      documentType: 'Official',
+      originalLink: 'https://docs.python.org/3/whatsnew/3.12.html',
+      description: 'Python 3.12 주요 변화와 새로운 표준 라이브러리를 번역합니다.',
+      maxParticipants: 4,
+      deadlineAt: new Date(new Date().setDate(new Date().getDate() + 14)),
+      status: 'PENDING',
+    },
+    {
+      creatorId: normalUser6.id,
+      title: 'AI Ethics 가이드 번역',
+      category: 'AI',
+      documentType: 'Official',
+      originalLink: 'https://ai.google/education/ethics.html',
+      description: 'AI 윤리 가이드라인을 한국어로 번역합니다.',
+      maxParticipants: 3,
+      deadlineAt: new Date(new Date().setDate(new Date().getDate() + 10)),
+      status: 'PENDING',
+    },
+    {
+      creatorId: proUser3.id,
+      title: 'Next.js 14 최신 기능 탐구',
+      category: 'Next',
+      documentType: 'Official',
+      originalLink: 'https://nextjs.org/docs/upgrading',
+      description: 'Next.js 14의 새로운 라우팅·데이터 페칭 기능을 번역합니다.',
+      maxParticipants: 5,
+      deadlineAt: new Date(new Date().setDate(new Date().getDate() + 12)),
+      status: 'PENDING',
+    },
+  ],
+});
 
   // 4-3. 승인 완료된 신청서 (2개)
   // [MODIFIED] 첫 번째 신청서는 마감된 챌린지용 (마감일을 어제로 설정)
@@ -199,6 +277,34 @@ async function main() {
       status: 'RECRUITING', // 모집 중 상태
     },
   });
+const challenge3 = await prisma.challenge.create({
+  data: {
+    applicationId: approvedApp2.id,
+    creatorId: proUser3.id,
+    title: approvedApp2.title,
+    category: approvedApp2.category,
+    documentType: approvedApp2.documentType,
+    originalLink: approvedApp2.originalLink,
+    description: approvedApp2.description,
+    maxParticipants: approvedApp2.maxParticipants,
+    deadlineAt: approvedApp2.deadlineAt,
+    status: 'RECRUITING',
+  },
+});
+const challenge4 = await prisma.challenge.create({
+  data: {
+    applicationId: approvedApp1.id,
+    creatorId: proUser2.id,
+    title: 'AI Ethics 가이드 번역 챌린지',
+    category: 'AI',
+    documentType: 'Official',
+    originalLink: 'https://ai.google/education/ethics.html',
+    description: 'AI 윤리 가이드라인을 번역하고 검증합니다.',
+    maxParticipants: 3,
+    deadlineAt: new Date(new Date().setDate(new Date().getDate() + 20)),
+    status: 'RECRUITING',
+  },
+});
 
   console.log('✅ 챌린지 2개 생성 완료 (마감: 1, 모집중: 1)');
 
@@ -243,6 +349,24 @@ async function main() {
       likeCount: 0,
     },
   });
+const work5 = await prisma.work.create({
+  data: {
+    challengeId: challenge3.id,
+    workerId: normalUser5.id,
+    content: `## Python 3.12 새로운 기능\n\nPython 3.12에서는 패턴 매칭 향상·새로운 표준 라이브러리 모듈이 추가되었습니다.`,
+    likeCount: 2,
+    isSelected: false,
+  },
+});
+const work6 = await prisma.work.create({
+  data: {
+    challengeId: challenge4.id,
+    workerId: normalUser6.id,
+    content: `## AI Ethics 가이드 번역\n\nAI 윤리 가이드라인을 한국어로 번역하며 핵심 원칙을 정리했습니다.`,
+    likeCount: 1,
+    isSelected: false,
+  },
+});
 
   console.log('✅ 작업물 4개 생성 완료');
 
@@ -269,7 +393,10 @@ async function main() {
         authorId: normalUser1.id,
         content: '데코레이터 변경점이 많아서 어렵네요 ㅠㅠ 잘 봤습니다.',
       },
-    ],
+            { workId: work5.id, authorId: proUser1.id, content: 'Python 새 기능 정리 잘했어요!' },
+        { workId: work6.id, authorId: proUser2.id, content: 'AI 윤리 번역 내용이 명확합니다.' },
+        { workId: work3.id, authorId: normalUser5.id, content: '데코레이터 부분에 추가 설명이 필요해요.' },
+        ],
   });
 
   console.log('✅ 댓글 4개 생성 완료');
@@ -306,7 +433,10 @@ async function main() {
         userId: normalUser3.id,
         message: '신청하신 "개인 일기장 번역하기" 챌린지가 반려되었습니다.',
       },
-    ],
+            { userId: normalUser5.id, message: '새로운 챌린지 "Python 3.12 새로운 기능 번역"이 등록되었습니다.' },
+        { userId: normalUser6.id, message: '새로운 챌린지 "AI Ethics 가이드 번역"이 등록되었습니다.' },
+        { userId: normalUser7.id, message: '작업물 "Python 3.12 새로운 기능"에 좋아요가 달렸습니다.' },
+        ],
   });
 
   console.log('✅ 알림 4개 생성 완료');
