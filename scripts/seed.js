@@ -343,8 +343,19 @@ const challenge4 = await prisma.challenge.create({
     data: {
       challengeId: challenge1.id,
       workerId: normalUser1.id,
-      content:
-        '## Next.js Routing\n\nNext.js의 라우팅 시스템은 파일 시스템 기반입니다...',
+      content: `## Next.js 라우팅: 정의 및 기초
+
+Next.js는 파일 시스템 기반 라우터를 사용합니다. 이는 폴더를 사용하여 라우트를 정의한다는 의미입니다.
+
+### 파일 및 폴더의 역할
+- **폴더**는 라우트를 정의하는 데 사용됩니다. 라우트는 파일 시스템 계층 구조를 따라 루트 폴더에서 \`page.js\` 파일을 포함하는 최종 하위 폴더까지의 단일 경로입니다.
+- **파일**은 라우트 세그먼트에 대한 UI를 생성하는 데 사용됩니다.
+
+### 라우트 세그먼트
+파일 시스템의 각 폴더는 **라우트 세그먼트**를 나타냅니다. 각 라우트 세그먼트는 **URL 경로**의 상응하는 세그먼트에 매핑됩니다.
+
+### 중첩된 라우트
+중첩된 라우트를 만들려면 폴더를 서로 중첩하면 됩니다. 예를 들어, \`app/dashboard/settings/page.js\` 파일은 \`/dashboard/settings\` URL 경로에 매핑됩니다.`,
       likeCount: 2,
       isSelected: true, //마감된 챌린지의 1등 작업물
     },
@@ -354,8 +365,23 @@ const challenge4 = await prisma.challenge.create({
     data: {
       challengeId: challenge1.id,
       workerId: normalUser2.id,
-      content:
-        '## 페이지와 레이아웃\n\nNext.js 13부터 도입된 App Directory의 핵심은...',
+      content: `## 페이지와 레이아웃 (Pages and Layouts)
+
+App Router 내부의 특수 파일 계층 구조를 통해 라우트별 UI를 쉽게 정의할 수 있습니다.
+
+### 페이지 (Pages)
+페이지는 라우트의 고유한 UI입니다. \`page.js\` 파일에서 컴포넌트를 내보내어 페이지를 정의할 수 있습니다.
+
+\`\`\`jsx
+export default function Page() {
+  return <h1>Hello, Next.js!</h1>
+}
+\`\`\`
+
+### 레이아웃 (Layouts)
+레이아웃은 여러 페이지 간에 공유되는 UI입니다. 탐색 시 레이아웃은 상태를 유지하고 대화형을 유지하며 다시 렌더링되지 않습니다. 레이아웃은 중첩될 수도 있습니다.
+
+상위 레이아웃은 \`children\` prop을 통해 하위 레이아웃이나 페이지를 받아 렌더링합니다.`,
       likeCount: 1,
     },
   });
@@ -364,8 +390,25 @@ const challenge4 = await prisma.challenge.create({
     data: {
       challengeId: challenge2.id,
       workerId: normalUser3.id,
-      content:
-        '## Decorators\n\n타입스크립트 5.0에서 데코레이터가 표준에 맞춰 변경되었습니다.',
+      content: `## TypeScript 5.0: 데코레이터 (Decorators)
+
+TypeScript 5.0에서는 오랫동안 기다려온 새로운 데코레이터 표준이 지원됩니다.
+
+### 클래스 데코레이터
+새로운 데코레이터 제안은 이전의 실험적(experimental) 데코레이터와는 구조가 다릅니다. 이제 데코레이터는 함수로 정의되며, 타겟과 컨텍스트 객체를 인자로 받습니다.
+
+\`\`\`typescript
+function loggedMethod(target: any, context: ClassMethodDecoratorContext) {
+    const methodName = String(context.name);
+    function replacementMethod(this: any, ...args: any[]) {
+        console.log(\`LOG: Entering method '\${methodName}'.\`);
+        return target.call(this, ...args);
+    }
+    return replacementMethod;
+}
+\`\`\`
+
+이 방식은 런타임 오버헤드를 줄이고 정적 분석을 더 용이하게 만듭니다.`,
       likeCount: 1,
     },
   });
@@ -374,29 +417,76 @@ const challenge4 = await prisma.challenge.create({
     data: {
       challengeId: challenge2.id,
       workerId: normalUser4.id,
-      content:
-        '## Const Type Parameters\n\nconst 제네릭 타입 파라미터에 대한 설명입니다.',
+      content: `## Const 타입 파라미터 (Const Type Parameters)
+
+함수를 호출할 때 TypeScript는 보통 더 일반적인 타입을 추론합니다. 예를 들어, 배열 리터럴은 가변적인 배열로 추론됩니다.
+
+TypeScript 5.0에서는 타입 파라미터 선언 앞에 \`const\`를 추가하여 \`as const\`와 유사한 효과를 낼 수 있습니다.
+
+\`\`\`typescript
+type HasNames = { readonly names: readonly string[] };
+
+function getNamesExactly<const T extends HasNames>(arg: T): T["names"] {
+    return arg.names;
+}
+
+// 추론된 타입: readonly ["Alice", "Bob", "Eve"]
+const names = getNamesExactly({ names: ["Alice", "Bob", "Eve"] });
+\`\`\`
+
+이를 통해 불필요한 타입 단언을 줄이고 더 정확한 추론이 가능해졌습니다.`,
       likeCount: 0,
     },
   });
-const work5 = await prisma.work.create({
-  data: {
-    challengeId: challenge3.id,
-    workerId: normalUser5.id,
-    content: `## Python 3.12 새로운 기능\n\nPython 3.12에서는 패턴 매칭 향상·새로운 표준 라이브러리 모듈이 추가되었습니다.`,
-    likeCount: 2,
-    isSelected: false,
-  },
-});
-const work6 = await prisma.work.create({
-  data: {
-    challengeId: challenge4.id,
-    workerId: normalUser6.id,
-    content: `## AI Ethics 가이드 번역\n\nAI 윤리 가이드라인을 한국어로 번역하며 핵심 원칙을 정리했습니다.`,
-    likeCount: 1,
-    isSelected: false,
-  },
-});
+
+  const work5 = await prisma.work.create({
+    data: {
+      challengeId: challenge3.id,
+      workerId: normalUser5.id,
+      content: `## Python 3.12: 새로운 기능 요약
+
+### f-string 구문 개선
+f-string 내부에 인용부호를 재사용할 수 있으며, 여러 줄 표현식과 백슬래시 사용이 가능해졌습니다.
+
+\`\`\`python
+# 이제 이런 표현이 가능합니다.
+print(f"This is a list: {', '.join(['apple', 'banana', 'cherry'])}")
+\`\`\`
+
+### 타입 파라미터 구문 (PEP 695)
+제네릭 클래스와 함수를 위한 더 깔끔한 구문이 도입되었습니다.
+
+\`\`\`python
+def max[T](args: Iterable[T]) -> T:
+    ...
+\`\`\`
+
+### 성능 향상
+인터프리터 레벨에서의 다양한 최적화를 통해 전반적인 실행 속도가 약 5% 향상되었습니다.`,
+      likeCount: 2,
+      isSelected: false,
+    },
+  });
+
+  const work6 = await prisma.work.create({
+    data: {
+      challengeId: challenge4.id,
+      workerId: normalUser6.id,
+      content: `## 구글 AI 윤리 가이드라인 (AI Ethics Principles)
+
+인공지능은 사회에 큰 이익을 줄 수 있는 잠재력을 가지고 있지만, 동시에 책임감 있는 개발이 필요합니다. 구글이 준수하는 7가지 원칙은 다음과 같습니다.
+
+1. **사회적으로 유익할 것 (Be socially beneficial)**: 경제, 보건 등 광범위한 분야에서 긍정적인 영향을 목표로 합니다.
+2. **불공정한 편향을 만들거나 강화하지 않을 것 (Avoid creating or reinforcing unfair bias)**: 인종, 성별, 정치적 견해 등에 따른 차별을 방지합니다.
+3. **안전을 위해 구축되고 테스트될 것 (Be built and tested for safety)**: 예기치 않은 위험을 방지하기 위해 엄격한 안전 제어 시스템을 적용합니다.
+4. **사람들에게 책임감을 가질 것 (Be accountable to people)**: 사용자의 피드백을 수용하고 통제권을 부여합니다.
+5. **개인정보 보호 설계를 통합할 것 (Incorporate privacy design principles)**: 데이터 수집 및 사용 시 프라이버시를 최우선으로 고려합니다.
+6. **과학적 우수성의 높은 표준을 유지할 것 (Uphold high standards of scientific excellence)**: 개방적인 학술 교류와 엄격한 과학적 방법론을 따릅니다.
+7. **이러한 원칙과 일치하는 용도로 사용될 것 (Be made available for uses that accord with these principles)**: 해로운 기술 개발을 지양합니다.`,
+      likeCount: 1,
+      isSelected: false,
+    },
+  });
 
   console.log('✅ 작업물 4개 생성 완료');
 
