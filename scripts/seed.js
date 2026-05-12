@@ -277,31 +277,61 @@ await prisma.challengeApplication.createMany({
       status: 'RECRUITING', // 모집 중 상태
     },
   });
+const approvedApp3 = await prisma.challengeApplication.create({
+    data: {
+      creatorId: proUser3.id,
+      title: 'Python 3.12 새로운 기능 번역 챌린지',
+      category: 'Python',
+      documentType: 'Official',
+      originalLink: 'https://docs.python.org/3/whatsnew/3.12.html',
+      description: 'Python 3.12 주요 변화를 번역합니다.',
+      maxParticipants: 4,
+      deadlineAt: new Date(new Date().setDate(new Date().getDate() + 14)),
+      status: 'APPROVED',
+      reviewedAt: new Date(),
+    },
+  });
+
+  const approvedApp4 = await prisma.challengeApplication.create({
+    data: {
+      creatorId: normalUser6.id,
+      title: 'AI Ethics 가이드 번역 챌린지',
+      category: 'AI',
+      documentType: 'Official',
+      originalLink: 'https://ai.google/education/ethics.html',
+      description: 'AI 윤리 가이드라인을 번역합니다.',
+      maxParticipants: 3,
+      deadlineAt: new Date(new Date().setDate(new Date().getDate() + 20)),
+      status: 'APPROVED',
+      reviewedAt: new Date(),
+    },
+  });
+
 const challenge3 = await prisma.challenge.create({
   data: {
-    applicationId: approvedApp2.id,
+    applicationId: approvedApp3.id,
     creatorId: proUser3.id,
-    title: approvedApp2.title,
-    category: approvedApp2.category,
-    documentType: approvedApp2.documentType,
-    originalLink: approvedApp2.originalLink,
-    description: approvedApp2.description,
-    maxParticipants: approvedApp2.maxParticipants,
-    deadlineAt: approvedApp2.deadlineAt,
+    title: approvedApp3.title,
+    category: approvedApp3.category,
+    documentType: approvedApp3.documentType,
+    originalLink: approvedApp3.originalLink,
+    description: approvedApp3.description,
+    maxParticipants: approvedApp3.maxParticipants,
+    deadlineAt: approvedApp3.deadlineAt,
     status: 'RECRUITING',
   },
 });
 const challenge4 = await prisma.challenge.create({
   data: {
-    applicationId: approvedApp1.id,
+    applicationId: approvedApp4.id,
     creatorId: proUser2.id,
-    title: 'AI Ethics 가이드 번역 챌린지',
-    category: 'AI',
-    documentType: 'Official',
-    originalLink: 'https://ai.google/education/ethics.html',
-    description: 'AI 윤리 가이드라인을 번역하고 검증합니다.',
-    maxParticipants: 3,
-    deadlineAt: new Date(new Date().setDate(new Date().getDate() + 20)),
+    title: approvedApp4.title,
+    category: approvedApp4.category,
+    documentType: approvedApp4.documentType,
+    originalLink: approvedApp4.originalLink,
+    description: approvedApp4.description,
+    maxParticipants: approvedApp4.maxParticipants,
+    deadlineAt: approvedApp4.deadlineAt,
     status: 'RECRUITING',
   },
 });
